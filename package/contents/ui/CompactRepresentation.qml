@@ -63,13 +63,15 @@ Loader {
         anchors.bottomMargin: - defaultWidgetSize * 0.05
         verticalAlignment: Text.AlignBottom
         width: parent.width
+        font.pixelSize: lastReloadedNotifier.height
         fontSizeMode: Text.Fit
-        font.pointSize: -1
-        minimumPixelSize: 1
+        minimumPixelSize: 10
         color: Kirigami.Theme.highlightColor
         text: lastReloadedText
         elide: Text.ElideRight
+        wrapMode: Text.NoWrap
         visible: false
+        z: 1
     }
 
 
