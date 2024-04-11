@@ -193,42 +193,41 @@ KCM.SimpleKCM {
 
     // ConfigGeneral home page
     ColumnLayout {
-        id: rhsColumn
-        width: parent.width
-        spacing: 2
+        spacing: 0
 
-        Label {
-            text: i18n("Plasmoid version") + ": " + plasmoid.metaData.version
-            Layout.alignment: Qt.AlignRight
-        }
-
-        Label {
+        Kirigami.Heading {
             text: i18n("Location")
-            font.bold: true
-            Layout.alignment: Qt.AlignLeft
+            type: Kirigami.Heading.Type.Primary
+            level: 3
+            Layout.alignment: Qt.AlignCenter
         }
 
-            HorizontalHeaderView {
-                id: myhorizontalHeader
-                // anchors.left: mytableView.left
-                // anchors.leftMargin: 0
-                // anchors.topMargin: 2
-                // anchors.top: parent.top
-                // anchors.right: parent.right
-                // anchors.rightMargin: 2
+        Kirigami.Separator {
+            Layout.fillWidth: true
+            Layout.margins: Kirigami.Units.largeSpacing
+        }
 
-                syncView: mytableView
-                clip: true
-                model: ListModel {
-                    Component.onCompleted: {
-                        append({ display: i18n("Source") });
-                        append({ display: i18n("Place Identifier") });
-                        append({ display: i18n("Displayed as") });
-                        append({ display: i18n("Action") });
-                        // append({ display: ("TBA") });
-                    }
+        HorizontalHeaderView {
+            id: myhorizontalHeader
+            // anchors.left: mytableView.left
+            // anchors.leftMargin: 0
+            // anchors.topMargin: 2
+            // anchors.top: parent.top
+            // anchors.right: parent.right
+            // anchors.rightMargin: 2
+
+            syncView: mytableView
+            clip: true
+            model: ListModel {
+                Component.onCompleted: {
+                    append({ display: i18n("Source") });
+                    append({ display: i18n("Place Identifier") });
+                    append({ display: i18n("Displayed as") });
+                    append({ display: i18n("Action") });
+                    // append({ display: ("TBA") });
                 }
             }
+        }
         ScrollView {
             id: placesTable
             width: parent.width
@@ -402,6 +401,11 @@ KCM.SimpleKCM {
             }
 
         }
+
+        Kirigami.Separator {
+            Layout.margins: Kirigami.Units.largeSpacing
+        }
+
         Row {
             Button {
                 icon.name: 'list-add'
@@ -434,157 +438,161 @@ KCM.SimpleKCM {
             }
         }
 
-        Label {
-            topPadding: 16
-            bottomPadding: 6
-            text: i18n("Miscellaneous")
-            font.bold: true
-            Layout.alignment: Qt.AlignLeft
-        }
+        Kirigami.FormLayout {
 
-        Item {
-            id: reloadItem
-            width: parent.width
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+                Kirigami.FormData.label: i18n("Miscellaneous")
+            }
 
-            Label {
-                id: reloadLabel1
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                text: i18n("Reload interval") + ":"
+            RowLayout {
+                Kirigami.FormData.label: i18n("Reload interval") + ":"
+                id: reloadItem
+                spacing: Kirigami.Units.smallSpacing
+
+                SpinBox {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left:reloadLabel1.right
+                    id: reloadIntervalMin
+                    stepSize: 10
+
+                    from: 20
+                    to: 120
+                    // suffix: i18nc("Abbreviation for minutes", "min")
+
+                }
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left:reloadIntervalMin.right
+                    text: i18nc("Abbreviation for minutes", "min")
+                    leftPadding: 6
+                }
+            }
+
+            CheckBox {
+                Kirigami.FormData.label: "Debug"
+                id: debugLogging
+                checked: false
                 Layout.alignment: Qt.AlignLeft
-                rightPadding: 6
+                visible: false
             }
-            SpinBox {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left:reloadLabel1.right
-                id: reloadIntervalMin
-                stepSize: 10
 
-                from: 20
-                to: 120
-                // suffix: i18nc("Abbreviation for minutes", "min")
+            Label {
+                Kirigami.FormData.label: i18n("Plasmoid version") + ":"
+                text: plasmoid.metaData.version
+                Layout.alignment: Qt.AlignRight
+            }
+        }
 
+        ColumnLayout {
+
+            Label {
+                id: attribution1
+                anchors.bottom: attribution2.top
+                font: Kirigami.Theme.smallFont
+                text: i18n("Met.no weather forecast data provided by The Norwegian Meteorological Institute.")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                MouseArea {
+                    cursorShape: Qt.PointingHandCursor
+                    anchors.fill: attribution1
+
+                    hoverEnabled: true
+
+                    onClicked: {
+                        Qt.openUrlExternally('https://www.met.no/en/About-us')
+                    }
+
+                    onEntered: {
+                        attribution1.font.underline = true
+                    }
+
+                    onExited: {
+                        attribution1.font.underline = false
+                    }
+                }
             }
             Label {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left:reloadIntervalMin.right
-                text: i18nc("Abbreviation for minutes", "min")
-                leftPadding: 6
-            }
-        }
+                id: attribution2
+                anchors.bottom: attribution3.top
+                font: Kirigami.Theme.smallFont
+                text: i18n("Sunrise/sunset data provided by Sunrise - Sunset.")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                MouseArea {
+                    cursorShape: Qt.PointingHandCursor
+                    anchors.fill: attribution2
 
-        CheckBox {
-            id: debugLogging
-            checked: false
-            text: "Debug"
-            Layout.alignment: Qt.AlignLeft
-            visible: false
-        }
+                    hoverEnabled: true
 
-    }
-    Item {
-        anchors.bottom: parent.bottom
-        Rectangle {
-            anchors.fill: parent
-            // anchors.top:
-        }
-        Label {
-            id: attribution1
-            anchors.bottom: attribution2.top
-            anchors.bottomMargin: 2
-            font: Kirigami.Theme.smallFont
-            text: i18n("Met.no weather forecast data provided by The Norwegian Meteorological Institute.")
-            MouseArea {
-                cursorShape: Qt.PointingHandCursor
-                anchors.fill: attribution1
+                    onClicked: {
+                        Qt.openUrlExternally('https://sunrise-sunset.org/about')
+                    }
 
-                hoverEnabled: true
+                    onEntered: {
+                        attribution2.font.underline = true
+                    }
 
-                onClicked: {
-                    Qt.openUrlExternally('https://www.met.no/en/About-us')
-                }
-
-                onEntered: {
-                    attribution1.font.underline = true
-                }
-
-                onExited: {
-                    attribution1.font.underline = false
+                    onExited: {
+                        attribution2.font.underline = false
+                    }
                 }
             }
-        }
-        Label {
-            id: attribution2
-            anchors.bottom: attribution3.top
-            anchors.bottomMargin: 2
-            font: Kirigami.Theme.smallFont
-            text: i18n("Sunrise/sunset data provided by Sunrise - Sunset.")
-            MouseArea {
-                cursorShape: Qt.PointingHandCursor
-                anchors.fill: attribution2
+            Label {
+                id: attribution3
+                anchors.bottom: attribution4.top
+                font: Kirigami.Theme.smallFont
+                text: i18n("OWM weather forecast data provided by OpenWeather.")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                MouseArea {
+                    cursorShape: Qt.PointingHandCursor
+                    anchors.fill: attribution3
 
-                hoverEnabled: true
+                    hoverEnabled: true
 
-                onClicked: {
-                    Qt.openUrlExternally('https://sunrise-sunset.org/about')
-                }
+                    onClicked: {
+                        Qt.openUrlExternally('https://openweathermap.org/about-us')
+                    }
 
-                onEntered: {
-                    attribution2.font.underline = true
-                }
+                    onEntered: {
+                        attribution3.font.underline = true
+                    }
 
-                onExited: {
-                    attribution2.font.underline = false
-                }
-            }
-        }
-        Label {
-            id: attribution3
-            anchors.bottom: attribution4.top
-            anchors.bottomMargin: 2
-            font: Kirigami.Theme.smallFont
-            text: i18n("OWM weather forecast data provided by OpenWeather.")
-            MouseArea {
-                cursorShape: Qt.PointingHandCursor
-                anchors.fill: attribution3
-
-                hoverEnabled: true
-
-                onClicked: {
-                    Qt.openUrlExternally('https://openweathermap.org/about-us')
-                }
-
-                onEntered: {
-                    attribution3.font.underline = true
-                }
-
-                onExited: {
-                    attribution3.font.underline = false
+                    onExited: {
+                        attribution3.font.underline = false
+                    }
                 }
             }
-        }
-        Label {
-            id: attribution4
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 2
-            font: Kirigami.Theme.smallFont
-            text: i18n("Weather icons created by Erik Flowers.")
-            MouseArea {
-                cursorShape: Qt.PointingHandCursor
-                anchors.fill: attribution4
+            Label {
+                id: attribution4
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 2
+                font: Kirigami.Theme.smallFont
+                text: i18n("Weather icons created by Erik Flowers.")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                MouseArea {
+                    cursorShape: Qt.PointingHandCursor
+                    anchors.fill: attribution4
 
-                hoverEnabled: true
+                    hoverEnabled: true
 
-                onClicked: {
-                    Qt.openUrlExternally('https://erikflowers.github.io/weather-icons/')
-                }
+                    onClicked: {
+                        Qt.openUrlExternally('https://erikflowers.github.io/weather-icons/')
+                    }
 
-                onEntered: {
-                    attribution4.font.underline = true
-                }
+                    onEntered: {
+                        attribution4.font.underline = true
+                    }
 
-                onExited: {
-                    attribution4.font.underline = false
+                    onExited: {
+                        attribution4.font.underline = false
+                    }
                 }
             }
         }
