@@ -278,6 +278,19 @@ function updateListView(filter) {
     }
     dbgprint("filteredCSVData.rowCount=" + filteredCSVData.rowCount)
 }
+function fillCSVData(countryData) {
+    dbgprint("Entered fillCSVData")
+    if (countryData.length === 0) {
+        return
+    }
+    myCSVData.clear()
+
+    var tmpDB = countryData.split(/\r?\n/)
+    for (var i = 0; i < tmpDB.length - 1; i++) {
+        myCSVData.appendRow(parseCSVLine(tmpDB[i]))
+    }
+    updateListView(locationEdit.text)
+}
 function loadCSVDatabase(countryName) {
     dbgprint("Entered loadCSVDatabase")
     dbgprint("QML_XHR_ALLOW_FILE_READ = 1 : " + env_QML_XHR_ALLOW_FILE_READ)

@@ -7,6 +7,7 @@ import "../../code/timezoneData.js" as TZData
 import Qt.labs.qmlmodels
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
+import org.kde.plasma.plasma5support as Plasma5Support
 
 KCM.SimpleKCM {
     function dbgprint(msg) {
@@ -1260,12 +1261,45 @@ KCM.SimpleKCM {
                 onCurrentIndexChanged: {
                     if (countryList.currentIndex > 0) {
                         // dbgprint("Loading Database: "+countryList.textAt(countryList.currentIndex))
-                        Helper.loadCSVDatabase(countryList.textAt(countryList.currentIndex))
+                        //Helper.loadCSVDatabase(countryList.textAt(countryList.currentIndex));
+                        var path = String(Qt.resolvedUrl("../../code/db/" + Helper.getshortCode(countryList.textAt(countryList.currentIndex)) + ".csv")).replace(/^(file:\/{3})/,"/");
+                        executable.exec('bash -c " cat ' + path + '"');
                         // Helper.loadCSVDatabase("Malta")
                     }
                     dbgprint(myCSVData.length)
                 }
             }
+
+            Plasma5Support.DataSource {
+                id: executable
+                engine: "executable"
+                connectedSources: []
+                onNewData: (sourceName, data) => {
+                    var exitCode = data["exit code"]
+                    var exitStatus = data["exit status"]
+                    var stdout = data["stdout"]
+                    var stderr = data["stderr"]
+                    exited(sourceName, exitCode, exitStatus, stdout, stderr)
+                    disconnectSource(sourceName) // cmd finished
+                }
+                function exec(cmd) {
+                    if (cmd) {
+                        connectSource(cmd)
+                    }
+                }
+                signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
+            }
+
+            Connections {
+                target: executable
+                function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
+                    if (stderr === "" && stdout !== "")
+                    {
+                        Helper.fillCSVData(stdout)
+                    }
+                }
+            }
+
             Label {
                 id: locationLabel
                 anchors.right: locationEdit.left
@@ -1294,8 +1328,6 @@ KCM.SimpleKCM {
             }
         }
     }
-
-
 
     Loader {
         id: saveSearchedData
