@@ -80,6 +80,7 @@ Loader {
         anchors.fill: parent
         visible: false
         running: false
+        z: 1
 
         states: [
             State {
