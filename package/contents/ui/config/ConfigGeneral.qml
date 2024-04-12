@@ -232,19 +232,17 @@ KCM.SimpleKCM {
             id: placesTable
             width: parent.width
             clip: true
-            Layout.preferredHeight: 180
+            Layout.maximumHeight: 180
             Layout.preferredWidth: parent.width
-            ScrollBar.horizontal.interactive: true
-            ScrollBar.vertical.interactive: true
 
             TableView {
                 anchors.fill: parent
                 property var columnWidths: [15, 35, 25, 25]
                 columnWidthProvider: function (column) {
                     let minW = 500
-                    let aw = (placesTable.width > minW ? placesTable.width : minW) - placesTable.effectiveScrollBarWidth
-                    return parseInt(aw * columnWidths[column] / 100 )
-
+                    let horizontalMargin = placesTable.effectiveScrollBarWidth !== 0 ? placesTable.effectiveScrollBarWidth : Kirigami.Units.smallSpacing
+                    let aw = (placesTable.width > minW ? placesTable.width : minW) - horizontalMargin
+                    return parseInt(aw * columnWidths[column] / 100)
                 }
 
                 implicitHeight: 200
