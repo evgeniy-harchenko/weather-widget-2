@@ -111,7 +111,6 @@ KCM.SimpleKCM {
                 stepSize: 10
                 from: 10
                 to: 8000
-                anchors.verticalCenter: parent.verticalCenter
                 //            suffix: i18nc("Abbreviation for seconds", "sec")
             }
             Label {
@@ -169,7 +168,6 @@ KCM.SimpleKCM {
             SpinBox {
                 id: widgetFontSize
                 Layout.alignment: Qt.AlignVCenter
-                anchors.verticalCenter: parent.verticalCenter
                 // decimals: 0
                 stepSize: 1
                 from: 4
