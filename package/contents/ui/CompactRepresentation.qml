@@ -123,7 +123,7 @@ Loader {
         onEntered: {
             if (showLastReloadedTime)
             {
-                lastReloadedNotifier.visible = !plasmoid.expanded
+                lastReloadedNotifier.visible = !main.expanded
             }
         }
 
