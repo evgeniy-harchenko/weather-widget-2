@@ -150,7 +150,7 @@ Loader {
         PlasmaCore.ToolTipArea {
             id: toolTipArea
             anchors.fill: parent
-            active: !plasmoid.expanded
+            active: !main.expanded
             interactive: true
             mainText: main.currentPlace.alias
             subText:  main.toolTipSubText
